@@ -31,20 +31,20 @@ export type Game = {
 }
 
 export const addStreamerAvatar = async (stream) => {
-  let streamerAvatar = await fetchStreamerByLogin(stream.user_login).profile_image_url;
-  return {...stream, avatar: streamerAvatar};
+  let streamerAvatarRequest = await fetchStreamerByLogin(stream.user_login);
+  let newStream = {...stream, avatar: streamerAvatarRequest.profile_image_url};
+  return newStream
 }
 
 // Fonction pour récupérer les streams en direct
 export const fetchLiveStreams = async (nbStreams = 5, userId: string): Promise<Stream[]> => {
   try {
     const response = await apiClient.get(`/streams?first=${nbStreams}&language=fr${userId ? `&user_id=${userId}` : ''}`);
-    // let streams = response.data.data;
-    // streams.forEach((stream, index) => {
-    //   streams[index] = addStreamerAvatar(stream);
-    // });
-    // return streams;
-    return response.data.data;
+    let streams = response.data.data;
+    streams.forEach(async (stream, index) => {
+      streams[index] = await addStreamerAvatar(stream);
+    });
+    return streams;
   } catch (error) {
     console.error('Error fetching live streams:', error);
     return [];
