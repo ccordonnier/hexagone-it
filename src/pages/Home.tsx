@@ -25,10 +25,14 @@ const Home: React.FC = () => {
 
     const getStreams = async () => {
         const streamsFetched = await fetchLiveStreams(15,userID);
-        const streamToFeature = streamsFetched.filter((stream, index) => index <5)
-        const streamsYouShouldLike = streamsFetched.filter((stream, index) => index >=5)
-        localStorage.setItem("StreamToFeature", JSON.stringify(streams));
-        localStorage.setItem("streamsYouShouldLike", JSON.stringify(streams));
+        const streamToFeature = streamsFetched.filter((stream, index) => {
+            return index <5
+        })
+        const streamsYouShouldLike = streamsFetched.filter((stream, index) => {
+            return index >=5
+        })
+        localStorage.setItem("streamToFeature", JSON.stringify(streamToFeature));
+        localStorage.setItem("streamsYouShouldLike", JSON.stringify(streamsYouShouldLike));
         setStreams(streamToFeature);
         setStreamsYouShouldLike(streamsYouShouldLike);
     };
@@ -41,23 +45,20 @@ const Home: React.FC = () => {
 
     useEffect(() => {
         getStreams();
+        
     }, [authContext]);
 
     return (
         <>
             <Navbar />
             <main className='flex flex-row'>
-                <Sidebar streams={streamsYouShouldLike} />
+                <Sidebar />
                 <section className="text-white bg-base-300 w-full p-10 lg:ml-60 mt-10">
                     <div className="">
                         <EmblaCarousel slides={streams} options={{ loop: true }} />
                         <h1 className='mb-4'>Chaînes live qui pourraient vous plaire</h1>
                         <VideosList streams={streamsYouShouldLike} streamsToShow={streamsYouShouldLikeToShow} />
                         <div className="divider mb-6"><span onClick={()=>{streamsYouShouldLikeToShow == 5 ? setStreamsYouShouldLikeToShow(10) : setStreamsYouShouldLikeToShow(5)}}>Afficher {streamsYouShouldLikeToShow == 5 ? 'plus' : 'moins'}</span></div>
-                        <h1 className='mb-4'>L'été des récompenses sur Twitch</h1>
-                        <VideosList streams={streamsYouShouldLike} streamsToShow={streamsYouShouldLikeToShow} />
-                        <div className="divider mb-6">Afficher plus</div>
-                        <h1 className='mb-4'>Catégories qui pourraient vous plaire</h1>
 
                     </div>
                 </section>

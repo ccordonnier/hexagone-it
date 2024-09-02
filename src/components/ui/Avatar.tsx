@@ -1,7 +1,7 @@
-const Avatar = ({imageUrl}) => {
+const Avatar = ({imageUrl, className="w-24"}) => {
     return (
         <div className="avatar">
-            <div className="w-24 rounded-full">
+            <div className={(className??"") +" rounded-full"}>
                 <img src={imageUrl}/>
             </div>
         </div>

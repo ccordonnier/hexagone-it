@@ -30,11 +30,28 @@ export type Game = {
   box_art_url: string;
 }
 
+export const validateToken = async (accessToken) => {
+  try {
+    const response = await axios.get('https://id.twitch.tv/oauth2/validate', {
+      headers: {
+        'Authorization': `OAuth ${accessToken}`,
+      }
+    });
+
+    const userId = response.data.user_id;
+    return userId;
+
+  } catch (error) {
+    console.error('Error validating token:', error);
+    return null;
+  }
+};
+
 export const addStreamerAvatar = async (stream) => {
   let streamerAvatarRequest = await fetchStreamerByLogin(stream.user_login);
-  let newStream = {...stream, avatar: streamerAvatarRequest.profile_image_url};
-  return newStream
-}
+  return streamerAvatarRequest.profile_image_url
+};
+
 
 // Fonction pour récupérer les streams en direct
 export const fetchLiveStreams = async (nbStreams = 5, userId: string): Promise<Stream[]> => {
@@ -42,7 +59,8 @@ export const fetchLiveStreams = async (nbStreams = 5, userId: string): Promise<S
     const response = await apiClient.get(`/streams?first=${nbStreams}&language=fr${userId ? `&user_id=${userId}` : ''}`);
     let streams = response.data.data;
     streams.forEach(async (stream, index) => {
-      streams[index] = await addStreamerAvatar(stream);
+      let avatar = await addStreamerAvatar(stream);
+      streams[index] = { ...stream, avatar };
     });
     return streams;
   } catch (error) {
@@ -94,7 +112,7 @@ export const searchStreamsByGame = async (gameName: string): Promise<Stream[]> =
 // Fonction pour rechercher le nombre de followers d'un streamer
 export const getStreamerFollowersCount = async (streamerId: string): Promise<number> => {
   try {
-    const followersResponse = await apiClient.get(`/channels/followers?broadcaster_id=${streamerId}`);    
+    const followersResponse = await apiClient.get(`/channels/followers?broadcaster_id=${streamerId}`);
     return followersResponse.data.total;
   } catch (error) {
     console.error(`Error searching followers by streamer id ${streamerId}:`, error);
@@ -105,7 +123,7 @@ export const getStreamerFollowersCount = async (streamerId: string): Promise<num
 // Fonction pour rechercher le nombre de followers d'un streamer
 export const getStreamerChannel = async (streamerId: string): Promise<number> => {
   try {
-    const channelsResponse = await apiClient.get(`/channels?broadcaster_id=${streamerId}`);    
+    const channelsResponse = await apiClient.get(`/channels?broadcaster_id=${streamerId}`);
     return channelsResponse.data.data[0];
   } catch (error) {
     console.error(`Error searching followers by streamer id ${streamerId}:`, error);
@@ -114,10 +132,68 @@ export const getStreamerChannel = async (streamerId: string): Promise<number> =>
 
 export const getStreamInformations = async (streamId: string): Promise<number> => {
   try {
-    const streamResponse = await apiClient.get(`/streams?user_id=${streamId}`);       
+    const streamResponse = await apiClient.get(`/streams?user_id=${streamId}`);
     return streamResponse.data.data[0];
   } catch (error) {
     console.error(`Error searching Stream informations:`, error);
+  }
+};
+
+export const getRecommendedChannelsForSidebar = async (): Promise<any[]> => {
+  try {
+    // Récupére des streams populaires
+    const streamsResponse = await apiClient.get('https://api.twitch.tv/helix/streams?first=10');
+    const streams = streamsResponse.data.data;
+
+    // Extrait les IDs des streamers
+    const userIds = streams.map(stream => stream.user_id);
+
+    // Récupére les informations des streamers
+    const usersResponse = await apiClient.get(`https://api.twitch.tv/helix/users?id=${userIds.join('&id=')}`);
+    let users = usersResponse.data.data;
+
+    // Ajouter le game_name à chaque utilisateur correspondant
+    users = users.map(user => {
+      const stream = streams.find(stream => stream.user_id === user.id);
+      return {
+        ...user,
+        game_name: stream ? stream.game_name : 'Unknown' // Ajouter le game_name au user
+      };
+    });
+
+    return users;
+
+  } catch (error) {
+    console.error('Error fetching recommended channels:', error);
+    return [];
+  }
+}
+
+// Fonction pour récupérer les chaînes suivies
+export const getFollowedChannels = async (userId) => {
+  try {
+    const response = await apiClient.get('https://api.twitch.tv/helix/streams/followed?user_id='+userId);
+    console.log("getFollowedChannels", response);
+    
+    const followedChannels = response.data.data;
+    return followedChannels;
+
+  } catch (error) {
+    console.error('Error fetching followed channels:', error);
+    return [];
+  }
+};
+
+// Fonction pour récupérer l'id d'un utilisateur connecté
+export const getLoggedInUserId = async (accessToken) => {
+  try {
+    const userResponse = await apiClient.get(`https://api.twitch.tv/helix/users`);
+    const user = userResponse.data.data;
+    return user.id;
+
+  } catch (error) {
+    console.error('Error fetching followed channels:', error);
+    return [];
   }
 };
 

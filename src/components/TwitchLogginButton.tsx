@@ -48,7 +48,7 @@ const TwitchLogginButton = () => {
             if( getParams().get("token_type") ) userAcess.token_type = getParams().get("token_type") ?? "";
             setAuthContext(userAcess);
             localStorage.setItem("userAcess", JSON.stringify(userAcess));
-            window.location.href = window.location.origin+window.location.pathname;
+            //window.location.href = window.location.origin+window.location.pathname;
         }
     }, []);
 

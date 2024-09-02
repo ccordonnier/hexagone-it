@@ -36,7 +36,7 @@ const Home: React.FC = () => {
             <Navbar />
             <main className='flex flex-row'>
                 <Sidebar />
-                <section className="text-white bg-base-300 w-full ml-60 mr-96 z-10">
+                <section className="text-white bg-base-300 w-full ml-60 z-10">
                     <TwitchEmbed channelName={streamer?.login} autoplay={true} />
                     <div className='p-6 bg-base-300'><VideoFooter streamer={streamer} /></div>
                     <div className='p-10 bg-base-300'>
@@ -52,7 +52,7 @@ const Home: React.FC = () => {
                     </div>
                 </section>
                 {/* <Chat /> */}
-                <div className='h-[90vh] w-96 fixed right-0 top-[7vh] z-20 bg-base-100  '></div>
+                {/* <div className='h-[90vh] w-96 fixed right-0 top-[7vh] z-20 bg-base-100  '></div> */}
             </main>
         </>
     );

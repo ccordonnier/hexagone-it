@@ -4,7 +4,6 @@ import { AuthContext } from "../../../context/AuthContext";
 
 const Navbar = () => {
     const { authContext, setAuthContext } = useContext(AuthContext);
-    console.log("authContext",authContext)
 
     const logout = async () => {        
         localStorage.removeItem("userAcess");
@@ -30,15 +29,12 @@ const Navbar = () => {
 
             </div>
             <div className="flex-1">
-                <a className="btn btn-ghost text-xl">StreamingT</a>
+                <a className="btn btn-ghost text-xl" href="/">StreamingT</a>
             </div>
             <div className="flex-none gap-2">
                 <div className="form-control">
                     <input type="text" placeholder="Search" className="input input-bordered w-24 md:w-auto" />
                 </div>
-                {/* <Modal openButtonText="Se connecter" title="Inscription">
-                    <p className="py-4">Press ESC key or click the button below to close</p>
-                </Modal> */}
                 {authContext?.access_token ?
                     <div className="dropdown dropdown-end">
                         <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">

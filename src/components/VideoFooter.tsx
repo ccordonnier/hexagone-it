@@ -7,16 +7,16 @@ const VideoFooter = ({streamer}) => {
     const [channel, setChannel] = useState(null);
 
     useEffect(() => {
-        const getChannel = async () => {
+        const getChannel = async () => { 
             const data = await getStreamInformations(streamer?.id);
             setChannel(data);
         }
         
         getChannel();
-    },[]);
+    });
     return (
         <div className="flex flex-row justify-between">
-            <div className="flex flex-row">
+            <div className="flex flex-row flex-start">
                 <div><Avatar imageUrl={streamer?.profile_image_url} /></div>
                 <div className="px-6">
                     <div>
@@ -24,7 +24,7 @@ const VideoFooter = ({streamer}) => {
                     </div>
                     <div className="mb-1"><p>{streamer?.description}</p></div>
                     <div className="flex flex-row">
-                        {channel?.tags.map(tag => <Tag>{tag}</Tag>)}
+                        {channel?.tags?.map(tag => <Tag>{tag}</Tag>)}
                     </div>
                 </div>
             </div>

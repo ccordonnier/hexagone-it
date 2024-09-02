@@ -14,10 +14,10 @@ const StandardCard = ({ stream }) => {
                 <div className="flex flex-col"></div>
                 <div className="flex flex-col w-full">
                     <div className='flex flex-row w-full mt-2'>
-                        <h2 className="font-semibold text-base overflow-hidden text-ellipsis whitespace-nowrap w-full">{stream.title}</h2>
+                        <h2 className="font-semibold text-base overflow-hidden text-ellipsis whitespace-nowrap w-full"><a href={`/streamer/${stream.user_login}`}>{stream.title}</a></h2>
                     </div>
-                    <a className="mt-1 text-sm text-red-400 overflow-hidden text-ellipsis whitespace-nowrap" href='#'>{stream.user_name}</a>
-                    <a className="mt-1 text-sm text-red-400 overflow-hidden text-ellipsis whitespace-nowrap" href='#'>{stream.game_name}</a>
+                    <a className="mt-1 text-sm text-red-200 hover:text-red-400 overflow-hidden text-ellipsis whitespace-nowrap" href={`/streamer/${stream.user_login}`}>{stream.user_name}</a>
+                    <a className="mt-1 text-sm text-red-200 hover:text-red-400 overflow-hidden text-ellipsis whitespace-nowrap" href='#'>{stream.game_name}</a>
                     <div>
                         {stream.tags.map((tag, index) => (
                             <Tag key={index}>{tag}</Tag>
