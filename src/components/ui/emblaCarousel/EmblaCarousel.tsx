@@ -11,7 +11,7 @@ import {
   usePrevNextButtons
 } from './EmblaCarouselArrowButtons'
 import './embla.css'
-import ResponsiveCard from '../../ui/cards/responsiveCard'
+import ResponsiveCard from '../cards/ResponsiveCard'
 import type { Stream } from '../../../api/twichApi';
 
 
