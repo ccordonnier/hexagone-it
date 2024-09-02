@@ -38,12 +38,12 @@ const Sidebar = () => {
 
                     <ul className="menu bg-base-100 w-60 h-full">
                         <li className="menu-title text-slate-200 text-lg">Pour vous</li>
-                        {userAccess && (
+                        {/* {userAccess && (
                             <>
                                 <li className="menu-title  uppercase">Chaînes suivies</li>
                                 <li className="mb-1"><a className="active">Item 1</a></li>
                             </>
-                        )}
+                        )} */}
                         <li className="menu-title text-slate-200 uppercase mt-2">Chaînes recommandées</li>
                       
                         {recommendedChannels?.map(channel => {
